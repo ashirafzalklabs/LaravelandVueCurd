@@ -14,8 +14,20 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::all()->toArray();
+        return array_reverse($posts);
     }
+
+     public function add(Request $request)
+     {
+         $post = new Post([
+             'title' => $request->input('title'),
+             'description' => $request->input('description')
+         ]);
+         $post->save();
+  
+         return response()->json('The post successfully added');
+     }
 
     /**
      * Show the form for creating a new resource.
@@ -55,9 +67,10 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit($id)
     {
-        //
+        $post = Post::find($id);
+        return response()->json($post);
     }
 
     /**
@@ -67,9 +80,12 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update($id, Request $request)
     {
-        //
+        $post = Post::find($id);
+        $post->update($request->all());
+ 
+        return response()->json('The post successfully updated');
     }
 
     /**
@@ -78,8 +94,11 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        $post->delete();
+ 
+        return response()->json('The post successfully deleted');
     }
 }
